@@ -15,22 +15,22 @@ messages_1(char *host)
 	int result_1;
 	enum clnt_stat retval_2;
 	int result_2;
-	tupla  set_value_1_tupla;
+	tupla  set_value_rpc_1_tupla;
 	enum clnt_stat retval_3;
 	tupla result_3;
-	int get_value_1_key;
+	int get_value_rpc_1_key;
 	enum clnt_stat retval_4;
 	int result_4;
-	tupla  modify_value_1_tupla;
+	tupla  modify_value_rpc_1_tupla;
 	enum clnt_stat retval_5;
 	int result_5;
-	int delete_key_1_key;
+	int delete_key_rpc_1_key;
 	enum clnt_stat retval_6;
 	int result_6;
-	int exist_1_key;
+	int exist_rpc_1_key;
 	enum clnt_stat retval_7;
 	int result_7;
-	double_key copy_key_1_keys;
+	double_key copy_key_rpc_1_keys;
 
 #ifndef	DEBUG
 	clnt = clnt_create (host, MESSAGES, FIRST_VER, "udp");
@@ -40,31 +40,31 @@ messages_1(char *host)
 	}
 #endif	/* DEBUG */
 
-	retval_1 = init_1(&result_1, clnt);
+	retval_1 = init_rpc_1(&result_1, clnt);
 	if (retval_1 != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
-	retval_2 = set_value_1(set_value_1_tupla, &result_2, clnt);
+	retval_2 = set_value_rpc_1(set_value_rpc_1_tupla, &result_2, clnt);
 	if (retval_2 != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
-	retval_3 = get_value_1(get_value_1_key, &result_3, clnt);
+	retval_3 = get_value_rpc_1(get_value_rpc_1_key, &result_3, clnt);
 	if (retval_3 != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
-	retval_4 = modify_value_1(modify_value_1_tupla, &result_4, clnt);
+	retval_4 = modify_value_rpc_1(modify_value_rpc_1_tupla, &result_4, clnt);
 	if (retval_4 != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
-	retval_5 = delete_key_1(delete_key_1_key, &result_5, clnt);
+	retval_5 = delete_key_rpc_1(delete_key_rpc_1_key, &result_5, clnt);
 	if (retval_5 != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
-	retval_6 = exist_1(exist_1_key, &result_6, clnt);
+	retval_6 = exist_rpc_1(exist_rpc_1_key, &result_6, clnt);
 	if (retval_6 != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
-	retval_7 = copy_key_1(copy_key_1_keys, &result_7, clnt);
+	retval_7 = copy_key_rpc_1(copy_key_rpc_1_keys, &result_7, clnt);
 	if (retval_7 != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
@@ -73,7 +73,51 @@ messages_1(char *host)
 #endif	 /* DEBUG */
 }
 
+int init(void){
+	CLIENT *clnt = clnt_create ("localhost", MESSAGES, FIRST_VER, "tcp");
+	if (clnt == NULL) {
+		clnt_pcreateerror ("localhost");
+		exit (1);
+	}
+	enum clnt_stat retval_1;
+	int result_1;
+	retval_1 = init_rpc_1(&result_1, clnt);
+	if (retval_1 != RPC_SUCCESS) {
+		clnt_perror (clnt, "call failed");
+	}
+	return 1;
+	clnt_destroy (clnt);
+}
 
+int modify(int key1, int key2){
+	return 1;
+}
+
+int set_value(int key, char *value1, int value2, double value3){
+	return 1;
+}
+
+int get_value(int key, char *value1, int *value2, double *value3){
+	return 1;
+}
+
+int modify_value(int key, char *value1, int value2, double value3){
+	return 1;
+}
+
+int delete_key(int key){
+	return 1;
+}
+
+int exist(int key){
+	return 1;
+}
+
+int copy_key(int key1, int key2){
+	return 1;
+}
+
+/*
 int
 main (int argc, char *argv[])
 {
@@ -86,4 +130,4 @@ main (int argc, char *argv[])
 	host = argv[1];
 	messages_1 (host);
 exit (0);
-}
+}*/

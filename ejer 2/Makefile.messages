@@ -3,7 +3,7 @@
 
 # Parameters
 
-CLIENT = client
+CLIENT = messages_client
 SERVER = messages_server
 
 SOURCES_CLNT.c = 
@@ -27,7 +27,7 @@ LDLIBS += -lnsl -lpthread -ldl -ltirpc
 
 # Targets 
 
-all : $(SERVER) client
+all : $(CLIENT) $(SERVER) client
 
 $(TARGETS) : $(SOURCES.x) 
 	rpcgen $(RPCGENFLAGS) $(SOURCES.x)
@@ -36,12 +36,13 @@ $(OBJECTS_CLNT) : $(SOURCES_CLNT.c) $(SOURCES_CLNT.h) $(TARGETS_CLNT.c)
 
 $(OBJECTS_SVC) : $(SOURCES_SVC.c) $(SOURCES_SVC.h) $(TARGETS_SVC.c) 
 
+$(CLIENT) : $(OBJECTS_CLNT) 
+	$(LINK.c) -o $(CLIENT) $(OBJECTS_CLNT) $(LDLIBS) 
 
 
 
-
-client : client_rpc.c messages_clnt.c messages_xdr.c messages_client.c
-	gcc client_rpc.c -o client messages_clnt.c messages_xdr.c messages_client.c $(CFLAGS) $(LDLIBS)
+client : client_rpc.c messages_clnt.c messages_xdr.c
+	gcc client_rpc.c -o client messages_clnt.c messages_xdr.c $(CFLAGS) $(LDLIBS)
 
 $(SERVER) : $(OBJECTS_SVC) 
 	$(LINK.c) -o $(SERVER) $(OBJECTS_SVC) $(LDLIBS)

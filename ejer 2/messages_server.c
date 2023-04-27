@@ -4,13 +4,14 @@
  * as a guideline for developing your own functions.
  */
 #include <stdbool.h>
+#include <stdio.h>
 #include "messages.h"
 #include "list.h"
 
 List list;
 
 bool_t
-init_rpc_1_svc(int *result, struct svc_req *rqstp)
+init_1_svc(int *result, struct svc_req *rqstp)
 {
 	bool_t retval = 1;
 
@@ -25,7 +26,7 @@ init_rpc_1_svc(int *result, struct svc_req *rqstp)
 }
 
 bool_t
-set_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
+set_value_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 {
 	bool_t retval;
 
@@ -37,7 +38,7 @@ set_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 }
 
 bool_t
-get_value_rpc_1_svc(int key, tupla *result,  struct svc_req *rqstp)
+get_value_1_svc(int key, tupla *result,  struct svc_req *rqstp)
 {
 	bool_t retval;
 
@@ -49,7 +50,7 @@ get_value_rpc_1_svc(int key, tupla *result,  struct svc_req *rqstp)
 }
 
 bool_t
-modify_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
+modify_value_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 {
 	bool_t retval;
 
@@ -61,7 +62,7 @@ modify_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 }
 
 bool_t
-delete_key_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
+delete_key_1_svc(int key, int *result,  struct svc_req *rqstp)
 {
 	bool_t retval;
 
@@ -73,7 +74,7 @@ delete_key_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
 }
 
 bool_t
-exist_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
+exist_1_svc(int key, int *result,  struct svc_req *rqstp)
 {
 	bool_t retval;
 
@@ -85,7 +86,7 @@ exist_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
 }
 
 bool_t
-copy_key_rpc_1_svc(double_key keys, int *result,  struct svc_req *rqstp)
+copy_key_1_svc(double_key keys, int *result,  struct svc_req *rqstp)
 {
 	bool_t retval;
 

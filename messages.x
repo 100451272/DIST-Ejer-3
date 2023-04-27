@@ -12,12 +12,12 @@ struct double_key {
 
 program MESSAGES {
     version FIRST_VER {
-        int init(void) = 1;
-        int set_value(tupla tupla) = 2;
-        tupla get_value(int key) = 3;
-        int modify_value(tupla tupla) = 4;
-        int delete_key(int key) = 5;
-        int exist(int key) = 6;
-        int copy_key(double_key keys) = 7;
+        int init_rpc(void) = 1;
+        int set_value_rpc(tupla tupla) = 2;
+        tupla get_value_rpc(int key) = 3;
+        int modify_value_rpc(tupla tupla) = 4;
+        int delete_key_rpc(int key) = 5;
+        int exist_rpc(int key) = 6;
+        int copy_key_rpc(double_key keys) = 7;
     } = 1;
 } = 1;
