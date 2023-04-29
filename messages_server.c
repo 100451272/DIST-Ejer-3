@@ -45,7 +45,7 @@ set_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 	tuple.valor2 = tupla.valor2;
 	tuple.valor3 = tupla.valor3;
 	set(&list, tupla.clave, &tuple);
-	result = 0;
+	*result = 0;
 	printList(list);
 
 	return retval;
@@ -74,11 +74,27 @@ get_value_rpc_1_svc(int key, tupla *result,  struct svc_req *rqstp)
 bool_t
 modify_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 {
-	bool_t retval;
+	bool_t retval = 1;
 
 	/*
 	 * insert server code here
 	 */
+	printf("Modify Value:\n");
+	if (exists(&list, tupla.clave) == 0) {
+            printf("La clave %d no existe\n", tupla.clave);
+            *result = 1;
+			return retval;
+        }
+	delete_node(&list, tupla.clave);
+	struct tuple tuple;
+	tuple.clave = tupla.clave;
+	strcpy(tuple.valor1, tupla.valor1);
+	tuple.valor2 = tupla.valor2;
+	tuple.valor3 = tupla.valor3;
+	set(&list, tupla.clave, &tuple);
+	*result = 0;
+	printList(list);
+	result = 0;
 
 	return retval;
 }
@@ -91,6 +107,18 @@ delete_key_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
 	/*
 	 * insert server code here
 	 */
+	printf("Delete Key:\n");
+	if (!exists(&list, key)){
+		printf("The tuple does not exist\n");
+		*result = 1;
+		return retval;
+	}
+	if (delete_node(&list, key) == 0) {
+		*result = 0;
+	} else {
+		*result = 1;
+	}
+	printList(list);
 
 	return retval;
 }
@@ -103,6 +131,13 @@ exist_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
 	/*
 	 * insert server code here
 	 */
+	*result = exists(&list, key);
+	if (*result == 0) {
+		printf("No existe\n");
+	}
+	else if (*result == 1){
+		printf("Existe\n");
+	}
 
 	return retval;
 }
@@ -115,6 +150,26 @@ copy_key_rpc_1_svc(double_key keys, int *result,  struct svc_req *rqstp)
 	/*
 	 * insert server code here
 	 */
+	struct tuple tupla1, tupla2;
+
+	// Buscar la tupla de key1
+	if (get(&list, keys.key1, &tupla1) == -1) {
+		*result = 1; // La clave key1 no existe
+		return retval;
+	}
+
+	// Crear la tupla de key2 con los valores de key1
+	tupla2.clave = keys.key2;
+	strcpy(tupla2.valor1, tupla1.valor1);
+	tupla2.valor2 = tupla1.valor2;
+	tupla2.valor3 = tupla1.valor3;
+
+	// Insertar o modificar la tupla en la lista
+	delete_node(&list, tupla2.clave);
+	set(&list, keys.key2, &tupla2);
+
+	*result = 0;
+	printList(list);
 
 	return retval;
 }

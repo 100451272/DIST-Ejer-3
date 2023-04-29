@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
 
     // destroy the RPC client
     clnt_destroy(client);*/
-
+    printf("Result: %d\n", res);
 
     return 0;
 }

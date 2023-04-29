@@ -124,7 +124,6 @@ int set_value(int key, char *value1, int value2, double value3){
 	if (retval != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
-	printf("%d", result);
 	clnt_destroy (clnt);
 	return result;
 }
@@ -147,7 +146,6 @@ int get_value(int key, char *value1, int *value2, double *value3){
 		clnt_perror (clnt, "call failed");
 	}
 	clnt_destroy (clnt);
-	printf("1: %s", tupla.valor1);
 	strcpy(value1, tupla.valor1);
 	*value2 = tupla.valor2;
 	*value3 = tupla.valor3;
@@ -162,19 +160,96 @@ int get_value(int key, char *value1, int *value2, double *value3){
 }
 
 int modify_value(int key, char *value1, int value2, double value3){
-	return 1;
+	char* ip = getenv("IP_TUPLAS");
+    if (ip == NULL){
+        printf("Variable IP_TUPLAS no definida\n");
+        exit(-1);
+    }
+	CLIENT *clnt = clnt_create (ip, MESSAGES, FIRST_VER, "tcp");
+	if (clnt == NULL) {
+		clnt_pcreateerror (ip);
+		exit (1);
+	}
+	enum clnt_stat retval;
+	tupla tupla;
+	tupla.clave = key;
+	strcpy(tupla.valor1, value1);
+	tupla.valor2 = value2;
+	tupla.valor3 = value3;
+	int result;
+	retval = modify_value_rpc_1(tupla, &result, clnt);
+	if (retval != RPC_SUCCESS) {
+		clnt_perror (clnt, "call failed");
+	}
+	clnt_destroy (clnt);
+	
+	return result;
 }
 
 int delete_key(int key){
-	return 1;
+	char* ip = getenv("IP_TUPLAS");
+    if (ip == NULL){
+        printf("Variable IP_TUPLAS no definida\n");
+        exit(-1);
+    }
+	CLIENT *clnt = clnt_create (ip, MESSAGES, FIRST_VER, "tcp");
+	if (clnt == NULL) {
+		clnt_pcreateerror (ip);
+		exit (1);
+	}
+	enum clnt_stat retval;
+	int result;
+	retval = delete_key_rpc_1(key, &result, clnt);
+	if (retval != RPC_SUCCESS) {
+		clnt_perror (clnt, "call failed");
+	}
+	clnt_destroy (clnt);
+	return result;
 }
 
 int exist(int key){
-	return 1;
+	char* ip = getenv("IP_TUPLAS");
+    if (ip == NULL){
+        printf("Variable IP_TUPLAS no definida\n");
+        exit(-1);
+    }
+	CLIENT *clnt = clnt_create (ip, MESSAGES, FIRST_VER, "tcp");
+	if (clnt == NULL) {
+		clnt_pcreateerror (ip);
+		exit (1);
+	}
+	enum clnt_stat retval;
+	int result;
+	retval = exist_rpc_1(key, &result, clnt);
+	if (retval != RPC_SUCCESS) {
+		clnt_perror (clnt, "call failed");
+	}
+	clnt_destroy (clnt);
+	return result;
 }
 
 int copy_key(int key1, int key2){
-	return 1;
+	char* ip = getenv("IP_TUPLAS");
+    if (ip == NULL){
+        printf("Variable IP_TUPLAS no definida\n");
+        exit(-1);
+    }
+	CLIENT *clnt = clnt_create (ip, MESSAGES, FIRST_VER, "tcp");
+	if (clnt == NULL) {
+		clnt_pcreateerror (ip);
+		exit (1);
+	}
+	enum clnt_stat retval;
+	int result;
+	double_key dkey;
+	dkey.key1 = key1;
+	dkey.key2 = key2;
+	retval = copy_key_rpc_1(dkey, &result, clnt);
+	if (retval != RPC_SUCCESS) {
+		clnt_perror (clnt, "call failed");
+	}
+	clnt_destroy (clnt);
+	return result;
 }
 
 /*
