@@ -27,11 +27,26 @@ init_rpc_1_svc(int *result, struct svc_req *rqstp)
 bool_t
 set_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 {
-	bool_t retval;
+	bool_t retval = 1;
 
 	/*
 	 * insert server code here
 	 */
+
+	printf("Set Value:\n");
+	if (exists(&list, tupla.clave)){
+		printf("The tuple already exists\n");
+		*result = 1;
+		return retval;
+	}
+	struct tuple tuple;
+	tuple.clave = tupla.clave;
+	strcpy(tuple.valor1, tupla.valor1);
+	tuple.valor2 = tupla.valor2;
+	tuple.valor3 = tupla.valor3;
+	set(&list, tupla.clave, &tuple);
+	result = 0;
+	printList(list);
 
 	return retval;
 }
