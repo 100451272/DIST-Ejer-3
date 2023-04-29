@@ -54,12 +54,20 @@ set_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 bool_t
 get_value_rpc_1_svc(int key, tupla *result,  struct svc_req *rqstp)
 {
-	bool_t retval;
+	bool_t retval = 1;
 
 	/*
 	 * insert server code here
 	 */
-
+	printf("Get Value\n");
+	struct tuple tuple;
+	int resultado = get(&list, key, &tuple);
+		if (resultado == 0) { // si la operación fue exitosa
+			// copiamos los valores de la tupla a los campos de la respuesta
+			strcpy(result->valor1, tuple.valor1);
+			result->valor2 = tuple.valor2;
+			result->valor3 = tuple.valor3;
+		}
 	return retval;
 }
 

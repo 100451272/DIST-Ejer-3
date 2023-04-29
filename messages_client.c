@@ -83,7 +83,6 @@ int init(void){
         printf("Variable IP_TUPLAS no definida\n");
         exit(-1);
     }
-	get_env(ip);
 	CLIENT *clnt = clnt_create (ip, MESSAGES, FIRST_VER, "tcp");
 	if (clnt == NULL) {
 		clnt_pcreateerror (ip);
@@ -109,7 +108,6 @@ int set_value(int key, char *value1, int value2, double value3){
         printf("Variable IP_TUPLAS no definida\n");
         exit(-1);
     }
-	get_env(ip);
 	CLIENT *clnt = clnt_create (ip, MESSAGES, FIRST_VER, "tcp");
 	if (clnt == NULL) {
 		clnt_pcreateerror (ip);
@@ -132,7 +130,35 @@ int set_value(int key, char *value1, int value2, double value3){
 }
 
 int get_value(int key, char *value1, int *value2, double *value3){
-	return 1;
+	char* ip = getenv("IP_TUPLAS");
+    if (ip == NULL){
+        printf("Variable IP_TUPLAS no definida\n");
+        exit(-1);
+    }
+	CLIENT *clnt = clnt_create (ip, MESSAGES, FIRST_VER, "tcp");
+	if (clnt == NULL) {
+		clnt_pcreateerror (ip);
+		exit (1);
+	}
+	enum clnt_stat retval;
+	tupla tupla;
+	retval = get_value_rpc_1(key, &tupla, clnt);
+	if (retval != RPC_SUCCESS) {
+		clnt_perror (clnt, "call failed");
+	}
+	clnt_destroy (clnt);
+	printf("1: %s", tupla.valor1);
+	strcpy(value1, tupla.valor1);
+	*value2 = tupla.valor2;
+	*value3 = tupla.valor3;
+	int result;
+	if (tupla.clave != 0){
+		result = 0;
+	}
+	else{
+		result = 1;
+	}
+	return result;
 }
 
 int modify_value(int key, char *value1, int value2, double value3){
