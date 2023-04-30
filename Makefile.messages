@@ -35,8 +35,11 @@ $(OBJECTS_CLNT) : $(SOURCES_CLNT.c) $(SOURCES_CLNT.h) $(TARGETS_CLNT.c)
 
 $(OBJECTS_SVC) : $(SOURCES_SVC.c) $(SOURCES_SVC.h) $(TARGETS_SVC.c)
 
-$(CLIENT) : client_rpc.c libclaves.so
-	gcc $(CFLAGS) -o $(CLIENT) client_rpc.c -L. -lclaves $(LDLIBS)
+$(CLIENT) : client_rpc.o libclaves.so
+	gcc $(CFLAGS) -o $(CLIENT) client_rpc.o -Wl,-rpath=. -L. -lclaves $(LDLIBS)
+
+client_rpc.o : client_rpc.c
+	gcc -c client_rpc.c -o client_rpc.o
 
 $(SERVER) : $(OBJECTS_SVC)
 	$(LINK.c) -o $(SERVER) $(OBJECTS_SVC) $(LDLIBS)
