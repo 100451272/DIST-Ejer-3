@@ -3,49 +3,46 @@
 
 # Parameters
 
-CLIENT = client
-SERVER = messages_server
+CLIENT = client_rpc
+SERVER = servidor
 
-SOURCES_CLNT.c = 
-SOURCES_CLNT.h = 
+SOURCES_CLNT.c =
+SOURCES_CLNT.h =
 SOURCES_SVC.c = list.c
 SOURCES_SVC.h = list.h
 SOURCES.x = messages.x
 
-TARGETS_SVC.c = messages_svc.c messages_server.c messages_xdr.c 
-TARGETS_CLNT.c = messages_clnt.c messages_client.c messages_xdr.c 
-TARGETS = messages.h messages_xdr.c messages_clnt.c messages_svc.c messages_client.c messages_server.c
+TARGETS_SVC.c = messages_svc.c servidor.c messages_xdr.c
+TARGETS_CLNT.c = messages_clnt.c claves.c messages_xdr.c
+TARGETS = messages.h messages_xdr.c messages_clnt.c messages_svc.c claves.c servidor.c
 
 OBJECTS_CLNT = $(SOURCES_CLNT.c:%.c=%.o) $(TARGETS_CLNT.c:%.c=%.o)
 OBJECTS_SVC = $(SOURCES_SVC.c:%.c=%.o) $(TARGETS_SVC.c:%.c=%.o)
-# Compiler flags 
 
+# Compiler flags
 CPPFLAGS += -D_REENTRANT
 CFLAGS += -g -I/usr/include/tirpc
 LDLIBS += -lnsl -lpthread -ldl -ltirpc
- RPCGENFLAGS = 
+RPCGENFLAGS =
 
-# Targets 
+# Targets
+all : $(SERVER) $(CLIENT) libclaves.so
 
-all : $(SERVER) client
-
-$(TARGETS) : $(SOURCES.x) 
+$(TARGETS) : $(SOURCES.x)
 	rpcgen $(RPCGENFLAGS) $(SOURCES.x)
 
-$(OBJECTS_CLNT) : $(SOURCES_CLNT.c) $(SOURCES_CLNT.h) $(TARGETS_CLNT.c) 
+$(OBJECTS_CLNT) : $(SOURCES_CLNT.c) $(SOURCES_CLNT.h) $(TARGETS_CLNT.c)
 
-$(OBJECTS_SVC) : $(SOURCES_SVC.c) $(SOURCES_SVC.h) $(TARGETS_SVC.c) 
+$(OBJECTS_SVC) : $(SOURCES_SVC.c) $(SOURCES_SVC.h) $(TARGETS_SVC.c)
 
+$(CLIENT) : client_rpc.c libclaves.so
+	gcc $(CFLAGS) -o $(CLIENT) client_rpc.c -L. -lclaves $(LDLIBS)
 
-
-
-
-client : client_rpc.c messages_clnt.c messages_xdr.c messages_client.c
-	gcc client_rpc.c -o client messages_clnt.c messages_xdr.c messages_client.c $(CFLAGS) $(LDLIBS)
-
-$(SERVER) : $(OBJECTS_SVC) 
+$(SERVER) : $(OBJECTS_SVC)
 	$(LINK.c) -o $(SERVER) $(OBJECTS_SVC) $(LDLIBS)
 
- clean:
-	 $(RM) core $(TARGETS) $(OBJECTS_CLNT) $(OBJECTS_SVC) $(CLIENT) $(SERVER)
+libclaves.so: claves.o messages_clnt.o messages_xdr.o
+	gcc -shared -o libclaves.so claves.o messages_clnt.o messages_xdr.o $(LDLIBS)
 
+clean:
+	$(RM) core $(TARGETS) $(OBJECTS_CLNT) $(OBJECTS_SVC) $(CLIENT) $(SERVER) libclaves.so
