@@ -8,7 +8,6 @@
 #include "list.h"
 
 List list;
-pthread_mutex_t mutex;
 
 bool_t
 init_rpc_1_svc(int *result, struct svc_req *rqstp)
@@ -19,7 +18,6 @@ init_rpc_1_svc(int *result, struct svc_req *rqstp)
 	 * insert server code here
 	 */
 	init_list(&list);
-	pthread_mutex_init(&mutex, NULL);
 	result= 0;
 	printf("List Initialized\n");
 
@@ -36,7 +34,6 @@ set_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 	 */
 
 	printf("Set Value:\n");
-	pthread_mutex_lock(&mutex);
 	if (exists(&list, tupla.clave)){
 		printf("The tuple already exists\n");
 		*result = 1;
@@ -48,7 +45,6 @@ set_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 	tuple.valor2 = tupla.valor2;
 	tuple.valor3 = tupla.valor3;
 	set(&list, tupla.clave, &tuple);
-	pthread_mutex_unlock(&mutex);
 	*result = 0;
 	printList(list);
 
@@ -65,19 +61,13 @@ get_value_rpc_1_svc(int key, tupla *result,  struct svc_req *rqstp)
 	 */
 	printf("Get Value\n");
 	struct tuple tuple;
-	pthread_mutex_lock(&mutex);
 	int resultado = get(&list, key, &tuple);
 		if (resultado == 0) { // si la operación fue exitosa
 			// copiamos los valores de la tupla a los campos de la respuesta
-			result->clave = 0;
 			strcpy(result->valor1, tuple.valor1);
 			result->valor2 = tuple.valor2;
 			result->valor3 = tuple.valor3;
 		}
-		else {
-			result->clave = -1;
-		}
-	pthread_mutex_unlock(&mutex);
 	return retval;
 }
 
@@ -90,7 +80,6 @@ modify_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 	 * insert server code here
 	 */
 	printf("Modify Value:\n");
-	pthread_mutex_lock(&mutex);
 	if (exists(&list, tupla.clave) == 0) {
             printf("La clave %d no existe\n", tupla.clave);
             *result = 1;
@@ -105,7 +94,7 @@ modify_value_rpc_1_svc(tupla tupla, int *result,  struct svc_req *rqstp)
 	set(&list, tupla.clave, &tuple);
 	*result = 0;
 	printList(list);
-	pthread_mutex_unlock(&mutex);
+	result = 0;
 
 	return retval;
 }
@@ -119,7 +108,6 @@ delete_key_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
 	 * insert server code here
 	 */
 	printf("Delete Key:\n");
-	pthread_mutex_lock(&mutex);
 	if (!exists(&list, key)){
 		printf("The tuple does not exist\n");
 		*result = 1;
@@ -131,7 +119,7 @@ delete_key_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
 		*result = 1;
 	}
 	printList(list);
-	pthread_mutex_unlock(&mutex);
+
 	return retval;
 }
 
@@ -143,9 +131,7 @@ exist_rpc_1_svc(int key, int *result,  struct svc_req *rqstp)
 	/*
 	 * insert server code here
 	 */
-	pthread_mutex_lock(&mutex);
 	*result = exists(&list, key);
-	pthread_mutex_unlock(&mutex);
 	if (*result == 0) {
 		printf("No existe\n");
 	}
@@ -165,7 +151,7 @@ copy_key_rpc_1_svc(double_key keys, int *result,  struct svc_req *rqstp)
 	 * insert server code here
 	 */
 	struct tuple tupla1, tupla2;
-	pthread_mutex_lock(&mutex);
+
 	// Buscar la tupla de key1
 	if (get(&list, keys.key1, &tupla1) == -1) {
 		*result = 1; // La clave key1 no existe
@@ -184,7 +170,7 @@ copy_key_rpc_1_svc(double_key keys, int *result,  struct svc_req *rqstp)
 
 	*result = 0;
 	printList(list);
-	pthread_mutex_unlock(&mutex);
+
 	return retval;
 }
 

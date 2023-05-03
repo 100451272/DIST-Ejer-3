@@ -3,7 +3,7 @@
 
 # Parameters
 
-CLIENT = cliente
+CLIENT = client_rpc
 SERVER = servidor
 
 SOURCES_CLNT.c =
@@ -48,4 +48,4 @@ libclaves.so: claves.o messages_clnt.o messages_xdr.o
 	gcc -shared -o libclaves.so claves.o messages_clnt.o messages_xdr.o $(LDLIBS)
 
 clean:
-	$(RM) core *.o servidor cliente libclaves.so
+	$(RM) core *.o servidor client_rpc libclaves.so
