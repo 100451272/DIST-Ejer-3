@@ -3,12 +3,6 @@
 # Definir variables de entorno para el cliente
 export IP_TUPLAS=localhost
 
-# Inicializar el servidor 
-./servidor &
-
-# Esperar a que el servidor esté listo antes de continuar
-sleep 1
-
 # Insertar una tupla en el servidor
 ./cliente set_value 1 "valor1" 2 3.14
 
@@ -39,18 +33,6 @@ sleep 1
 
 # Limpiar el servidor
 ./cliente init
-
-# Cerrar el servidor
-pkill servidor
-
-
-# Definir variables de entorno para el cliente
-export IP_TUPLAS=localhost
-
-# Inicializar el servicio
-echo "Iniciando servicio..."
-./servidor &
-sleep 1
 
 # Prueba de inserción de elementos
 echo "Insertando elementos..."
