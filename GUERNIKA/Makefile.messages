@@ -3,7 +3,7 @@
 
 # Parameters
 
-CLIENT = client_rpc
+CLIENT = cliente
 SERVER = servidor
 
 SOURCES_CLNT.c =
@@ -26,10 +26,7 @@ LDLIBS += -lnsl -lpthread -ldl -ltirpc
 RPCGENFLAGS =
 
 # Targets
-all : $(SERVER) $(CLIENT) libclaves.so
-
-$(TARGETS) : $(SOURCES.x)
-	rpcgen $(RPCGENFLAGS) $(SOURCES.x)
+all : $(SERVER) $(CLIENT) libclaves.so pruebas
 
 $(OBJECTS_CLNT) : $(SOURCES_CLNT.c) $(SOURCES_CLNT.h) $(TARGETS_CLNT.c)
 
@@ -47,5 +44,8 @@ $(SERVER) : $(OBJECTS_SVC)
 libclaves.so: claves.o messages_clnt.o messages_xdr.o
 	gcc -shared -o libclaves.so claves.o messages_clnt.o messages_xdr.o $(LDLIBS)
 
+pruebas: pruebas.c
+	gcc pruebas.c -o pruebas
+
 clean:
-	$(RM) core *.o servidor client_rpc libclaves.so
+	$(RM) core *.o servidor cliente libclaves.so

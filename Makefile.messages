@@ -26,7 +26,7 @@ LDLIBS += -lnsl -lpthread -ldl -ltirpc
 RPCGENFLAGS =
 
 # Targets
-all : $(SERVER) $(CLIENT) libclaves.so
+all : $(SERVER) $(CLIENT) libclaves.so pruebas
 
 $(OBJECTS_CLNT) : $(SOURCES_CLNT.c) $(SOURCES_CLNT.h) $(TARGETS_CLNT.c)
 
@@ -43,6 +43,9 @@ $(SERVER) : $(OBJECTS_SVC)
 
 libclaves.so: claves.o messages_clnt.o messages_xdr.o
 	gcc -shared -o libclaves.so claves.o messages_clnt.o messages_xdr.o $(LDLIBS)
+
+pruebas: pruebas.c
+	gcc pruebas.c -o pruebas
 
 clean:
 	$(RM) core *.o servidor cliente libclaves.so
